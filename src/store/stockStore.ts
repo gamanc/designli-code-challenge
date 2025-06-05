@@ -29,7 +29,6 @@ export const useStockStore = create<StockStore>((set) => ({
   history: {},
   updateAlert: (symbol, alertPrice) =>
     set((state) => {
-      if (state.trackedSymbols.includes(symbol)) return state;
       return {
         trackedSymbols: [...state.trackedSymbols, symbol],
         alerts: { ...state.alerts, [symbol]: alertPrice },
