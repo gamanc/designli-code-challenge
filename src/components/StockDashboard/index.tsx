@@ -2,14 +2,7 @@ import { Box, Heading, HStack } from "@chakra-ui/react";
 import useStockPrices from "../../hooks/useStockPrices";
 import StockCard from "../StockCard";
 import { useStockStore } from "../../store/stockStore";
-
-const SYMBOLS = [
-  "BINANCE:BTCUSDT",
-  "COINBASE:BTC-USD",
-  "MSFT",
-  "AMZN",
-  "IC MARKETS:1",
-];
+import { SYMBOLS } from "../../constants/stockSymbols";
 
 const StockDashboard = () => {
   const { connectionStatus } = useStockPrices({
@@ -17,7 +10,6 @@ const StockDashboard = () => {
   });
 
   const prices = useStockStore((s) => s.prices);
-  const history = useStockStore((s) => s.history);
 
   return (
     <Box>
@@ -32,8 +24,8 @@ const StockDashboard = () => {
           "&::-webkit-scrollbar": {
             display: "none",
           },
-          "-ms-overflow-style": "none",
-          "scrollbar-width": "none",
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
         }}
       >
         <HStack px={2}>
