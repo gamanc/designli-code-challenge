@@ -1,12 +1,12 @@
+import axios from "axios";
 import type {
   ConnectionStatus,
   FinnhubDataObject,
   FinnhubMessage,
 } from "@/interfaces/finnhub";
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 
-const API_TOKEN = "d10jco9r01qlsac9fkfgd10jco9r01qlsac9fkg0"; // Replace with your Finnhub token
+const API_TOKEN = import.meta.env.VITE_FINNHUB_TOKEN ?? ""; // Update .env file with your Finnhub token
 
 interface Props {
   symbols: string[];
@@ -114,15 +114,6 @@ const useStockPrices = ({ symbols }: Props) => {
       }
     };
   }, []);
-
-  //   const closeConnection = () => {
-  //     if (socketRef.current !== null && socketRef.current.readyState === WebSocket.OPEN) {
-  //       symbols.forEach(symbol => {
-  //         socketRef.current.send(JSON.stringify({ type: 'unsubscribe', symbol }));
-  //       });
-  //       socketRef.current.close();
-  //     }
-  //   };
 
   return { connectionStatus, symbolsData };
 };
