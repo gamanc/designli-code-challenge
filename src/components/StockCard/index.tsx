@@ -9,10 +9,12 @@ interface Props {
 
 const StockCard = ({ symbol, price = null, previousClose = null }: Props) => {
   const change =
-    previousClose !== null && price !== null ? price - previousClose : null;
+    previousClose !== null && price !== null && price > 0
+      ? price - previousClose
+      : null;
 
   const percent =
-    previousClose !== null && price !== null
+    previousClose !== null && price !== null && price > 0 && previousClose > 0
       ? (change! / previousClose) * 100
       : null;
 
@@ -34,8 +36,12 @@ const StockCard = ({ symbol, price = null, previousClose = null }: Props) => {
         bg={useColorModeValue("white", "gray.700")}
       >
         <Heading size="md">{symbol}</Heading>
-        <Heading size="3xl">${price?.toFixed(2) ?? "—"}</Heading>
-        {percent != null && (
+
+        <Skeleton loading={!price}>
+          <Heading size="3xl">${price?.toFixed(2) ?? "—"}</Heading>
+        </Skeleton>
+
+        {percent !== null && (
           <Text mt={2} fontWeight="bold" color={color}>
             {isUp ? "▲" : "▼"} {percent.toFixed(2)}%
           </Text>

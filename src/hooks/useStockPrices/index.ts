@@ -5,6 +5,7 @@ import type {
   FinnhubMessage,
 } from "@/interfaces/finnhub";
 import { useEffect, useRef, useState } from "react";
+import { useStockStore } from "../../store/stockStore";
 
 const API_TOKEN = import.meta.env.VITE_FINNHUB_TOKEN ?? ""; // Update .env file with your Finnhub token
 
@@ -12,25 +13,16 @@ interface Props {
   symbols: string[];
 }
 
-type StockPriceState = {
-  [symbol: string]: {
-    price: number;
-    lastUpdated: number;
-    volume: number;
-    previousClosePrice: number | null;
-  };
-};
-
 const useStockPrices = ({ symbols }: Props) => {
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("Disconnected");
-  const [symbolsData, setSymbolsData] = useState<StockPriceState>({});
+  const updateSymbolClosePrice = useStockStore((s) => s.updateSymbolClosePrice);
+  const updatePrice = useStockStore((s) => s.updatePrice);
 
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     const fetchInitialPrices = async () => {
-      const updates: StockPriceState = {};
       await Promise.all(
         symbols.map(async (symbol) => {
           try {
@@ -38,34 +30,24 @@ const useStockPrices = ({ symbols }: Props) => {
               params: { symbol, token: API_TOKEN },
             });
 
-            updates[symbol] = {
-              price: res.data.c ?? 0,
-              volume: 0,
-              lastUpdated: Date.now(),
-              previousClosePrice: res.data.pc ?? null,
-            };
+            updateSymbolClosePrice(symbol, res.data.pc ?? null);
           } catch (err) {
             console.error(`Failed to fetch quote for ${symbol}`, err);
           }
         })
       );
-      setSymbolsData(updates);
     };
 
     fetchInitialPrices();
-  }, []);
+  }, [symbols]);
 
   const handleMessageEvent = (event: MessageEvent<any>) => {
     const message: FinnhubMessage = JSON.parse(event.data);
     if (message.type === "trade" && message.data?.length) {
       const updates: FinnhubDataObject[] = message.data;
-      setSymbolsData((prev) => {
-        const updated = { ...prev };
-        updates.forEach(({ s, p, t, v }) => {
-          const prevData = prev[s] ?? { previousClose: null };
-          updated[s] = { ...prevData, price: p, lastUpdated: t, volume: v };
-        });
-        return updated;
+
+      updates.forEach(({ s, p, v, t }) => {
+        updatePrice(s, p, v, t);
       });
     }
   };
@@ -87,7 +69,6 @@ const useStockPrices = ({ symbols }: Props) => {
         handleMessageEvent(event);
       } catch (error) {
         console.error("Error parsing message", error);
-        setSymbolsData({});
       }
     };
 
@@ -115,7 +96,7 @@ const useStockPrices = ({ symbols }: Props) => {
     };
   }, []);
 
-  return { connectionStatus, symbolsData };
+  return { connectionStatus };
 };
 
 export default useStockPrices;

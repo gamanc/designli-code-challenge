@@ -1,6 +1,7 @@
 import { Box, Heading, HStack } from "@chakra-ui/react";
 import useStockPrices from "../../hooks/useStockPrices";
 import StockCard from "../StockCard";
+import { useStockStore } from "../../store/stockStore";
 
 const SYMBOLS = [
   "BINANCE:BTCUSDT",
@@ -11,9 +12,12 @@ const SYMBOLS = [
 ];
 
 const StockDashboard = () => {
-  const { connectionStatus, symbolsData } = useStockPrices({
+  const { connectionStatus } = useStockPrices({
     symbols: SYMBOLS,
   });
+
+  const prices = useStockStore((s) => s.prices);
+  const history = useStockStore((s) => s.history);
 
   return (
     <Box>
@@ -34,7 +38,7 @@ const StockDashboard = () => {
       >
         <HStack px={2}>
           {SYMBOLS.map((stockSymbol) => {
-            const data = symbolsData[stockSymbol];
+            const data = prices[stockSymbol];
 
             return (
               <StockCard

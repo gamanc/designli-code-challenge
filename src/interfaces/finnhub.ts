@@ -10,4 +10,15 @@ export type FinnhubMessage = {
   data?: FinnhubDataObject[];
 };
 
+export type StockQuote = {
+  [symbol: string]: StockInfo;
+};
+
+export type StockInfo = {
+  price: number;
+  volume: number;
+  lastUpdated: number;
+  previousClosePrice: number | null;
+};
+
 export type ConnectionStatus = "Disconnected" | "Connected" | "Error";
