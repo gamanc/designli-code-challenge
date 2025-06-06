@@ -100,7 +100,7 @@ const useStockPrices = ({ symbols }: Props) => {
         setConnectionStatus("Disconnected");
       }
     };
-  }, []);
+  }, [symbols]);
 
   return { connectionStatus };
 };

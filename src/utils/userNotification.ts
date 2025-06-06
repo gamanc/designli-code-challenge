@@ -1,4 +1,3 @@
-import { createToaster } from "@chakra-ui/react";
 import { toaster } from "../components/ui/toaster";
 
 export const pushNotification = (symbol: string, price: number) => {
