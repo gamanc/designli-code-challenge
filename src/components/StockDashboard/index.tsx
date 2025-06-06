@@ -1,4 +1,4 @@
-import { Box, Heading, HStack } from "@chakra-ui/react";
+import { Box, Heading, HStack, Spinner, Text } from "@chakra-ui/react";
 import useStockPrices from "../../hooks/useStockPrices";
 import StockCard from "../StockCard";
 import { useStockStore } from "../../store/stockStore";
@@ -13,9 +13,6 @@ const StockDashboard = () => {
 
   return (
     <Box>
-      <Heading p={6} mb={4}>
-        📈 Live Stock Dashboard - {connectionStatus}
-      </Heading>
       <Box
         width="100%"
         overflowX="auto"
@@ -43,6 +40,14 @@ const StockDashboard = () => {
           })}
         </HStack>
       </Box>
+      <Heading paddingTop={4}>📈 Live Stock Dashboard</Heading>
+      <Text color={connectionStatus === "Connected" ? "green.500" : "inherit"}>
+        {connectionStatus === "Loading" ? (
+          <Spinner size="sm" />
+        ) : (
+          connectionStatus
+        )}
+      </Text>
     </Box>
   );
 };

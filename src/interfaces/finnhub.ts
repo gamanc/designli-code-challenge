@@ -21,4 +21,8 @@ export type StockInfo = {
   previousClosePrice: number | null;
 };
 
-export type ConnectionStatus = "Disconnected" | "Connected" | "Error";
+export type ConnectionStatus =
+  | "Loading"
+  | "Disconnected"
+  | "Connected"
+  | "Error";

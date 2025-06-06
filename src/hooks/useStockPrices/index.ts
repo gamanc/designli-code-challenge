@@ -15,7 +15,7 @@ interface Props {
 
 const useStockPrices = ({ symbols }: Props) => {
   const [connectionStatus, setConnectionStatus] =
-    useState<ConnectionStatus>("Disconnected");
+    useState<ConnectionStatus>("Loading");
   const updateSymbolClosePrice = useStockStore((s) => s.updateSymbolClosePrice);
   const updatePrice = useStockStore((s) => s.updatePrice);
 
@@ -55,6 +55,7 @@ const useStockPrices = ({ symbols }: Props) => {
   useEffect(() => {
     const ws = new WebSocket(`wss://ws.finnhub.io?token=${API_TOKEN}`);
     socketRef.current = ws;
+    setConnectionStatus("Loading");
 
     ws.onopen = () => {
       console.log("WebSocket connected");
@@ -74,12 +75,16 @@ const useStockPrices = ({ symbols }: Props) => {
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
-      setConnectionStatus("Error");
+      if (ws.readyState !== WebSocket.OPEN) {
+        setConnectionStatus("Error");
+      }
     };
 
     ws.onclose = () => {
       console.log("WebSocket closed");
-      setConnectionStatus("Disconnected");
+      if (ws.readyState !== WebSocket.OPEN) {
+        setConnectionStatus("Disconnected");
+      }
     };
 
     return () => {
@@ -92,6 +97,7 @@ const useStockPrices = ({ symbols }: Props) => {
           ws.send(JSON.stringify({ type: "unsubscribe", symbol }));
         });
         socketRef.current.close();
+        setConnectionStatus("Disconnected");
       }
     };
   }, []);
