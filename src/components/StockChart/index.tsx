@@ -1,5 +1,5 @@
 // src/components/StockChart.tsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -8,15 +8,20 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  ReferenceLine,
 } from "recharts";
-import { Badge, Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import { Badge, Flex, Heading, Text } from "@chakra-ui/react";
 import { useStockStore } from "../../store/stockStore";
 import { SYMBOL_COLORS, SYMBOLS } from "../../constants/stockSymbols";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 export const StockChart: React.FC = () => {
   const history = useStockStore((s) => s.history);
-  const [selectedStocks, setSelectedStocks] = useState<string[]>(SYMBOLS);
+  const alerts = useStockStore((s) => s.alerts);
+  const { value: selectedStocks = [], setValue: setSelectedStocks } =
+    useLocalStorage<string[]>("selectedSymbols", SYMBOLS);
 
+  // Format timestamps into
   const formatXAxis = (timestamp: number) => {
     const date = new Date(timestamp * 1000);
     return date.toLocaleTimeString();
@@ -57,16 +62,16 @@ export const StockChart: React.FC = () => {
         {SYMBOLS.map((symbol) => (
           <Badge
             key={symbol}
-            variant={selectedStocks.includes(symbol) ? "solid" : "outline"}
+            variant={selectedStocks?.includes(symbol) ? "solid" : "outline"}
             onClick={() => handleToggleStock(symbol)}
             backgroundColor={
-              selectedStocks.includes(symbol)
+              selectedStocks?.includes(symbol)
                 ? SYMBOL_COLORS[symbol]
                 : "inherit"
             }
             borderWidth="1px"
             borderColor={
-              selectedStocks.includes(symbol)
+              selectedStocks?.includes(symbol)
                 ? "inherit"
                 : SYMBOL_COLORS[symbol]
             }
@@ -75,7 +80,7 @@ export const StockChart: React.FC = () => {
           </Badge>
         ))}
       </Flex>
-      {selectedStocks.length === 0 ? (
+      {selectedStocks?.length === 0 ? (
         <Flex
           p={8}
           borderWidth="1px"
@@ -96,7 +101,17 @@ export const StockChart: React.FC = () => {
             <YAxis domain={["auto", "auto"]} />
             <Tooltip />
             <Legend />
-            {selectedStocks.map((symbol) => (
+            {Object.keys(alerts).map((s) => (
+              <ReferenceLine
+                key={s}
+                y={alerts[s]}
+                stroke={SYMBOL_COLORS[s]}
+                strokeDasharray="3 3"
+                label={`⏰ ${s} - ${alerts[s]}`}
+              />
+            ))}
+
+            {selectedStocks?.map((symbol) => (
               <Line
                 key={symbol}
                 type="monotone"
