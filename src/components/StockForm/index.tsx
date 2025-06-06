@@ -40,7 +40,7 @@ export const StockForm: React.FC = () => {
       toaster.create({
         description: "Invalid alert price.",
         type: "error",
-        duration: 2000,
+        duration: 10000,
         closable: true,
       });
       return;
@@ -50,7 +50,7 @@ export const StockForm: React.FC = () => {
     toaster.create({
       title: `Added ${selectedSymbol} with alert at $${alertValue}`,
       type: "success",
-      duration: 2000,
+      duration: 10000,
       closable: true,
     });
 

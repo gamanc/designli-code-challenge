@@ -40,6 +40,7 @@ const StockDashboard = () => {
           })}
         </HStack>
       </Box>
+
       <Heading paddingTop={4}>📈 Live Stock Dashboard</Heading>
       <Text color={connectionStatus === "Connected" ? "green.500" : "inherit"}>
         {connectionStatus === "Loading" ? (
