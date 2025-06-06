@@ -46,7 +46,7 @@ It allows users to:
 
 ## Screenshots
 
->
+![image](https://github.com/user-attachments/assets/621b190c-2a3b-4d79-b4b7-db7de83a72ea)
 
 ---
 
