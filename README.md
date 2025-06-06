@@ -1,54 +1,72 @@
-# React + TypeScript + Vite
+# 📈 Real-Time Stock Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A real-time stock tracking dashboard built with React, Vite, and Chakra UI.  
+It allows users to:
 
-Currently, two official plugins are available:
+- Monitor live stock prices via the Finnhub WebSocket API
+- Set custom price alerts and receive in-browser notifications
+- Visualize live price history across multiple stocks on a single chart
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## How to Run
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Install dependencies**
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+   ```bash
+   npm install
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. **Set up environment variable**  
+   Create a `.env` file in the root of the project and add your Finnhub API token:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   ```env
+   VITE_FINNHUB_TOKEN=your_token_here
+   ```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+3. **Start the app**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## Tech Stack
+
+| Library                | Reason                                |
+| ---------------------- | ------------------------------------- |
+| **Vite**               | Lightning-fast bundler and dev server |
+| **React + TypeScript** | Core UI and logic with strong typing  |
+| **Zustand**            | Simple and scalable state management  |
+| **Chakra UI**          | Fast and reliable UI components       |
+| **Recharts**           | Real-time data visualization          |
+| **Finnhub API**        | Real-time stock trade and quote data  |
+
+---
+
+## Screenshots
+
+>
+
+---
+
+## Features Implemented
+
+- Live stock price updates (WebSocket)
+- Custom alert system with browser push notifications (Custom toaster alerts if the user does not allow notifications)
+- Real-time line chart with forward-filled price history
+- Option to toggle on/off different symbols from the chart.
+- Clean responsive UI using Chakra UI
+- Modular and maintainable code with Zustand store
+
+---
+
+## Notes
+
+- Push notifications only work when the tab is open and user has granted permission
+- The app does not currently include offline/PWA functionality :(
+
+## Final note
+
+Thank you for the opportunity to apply and share this project. I’ve put a lot of care and effort into building it, and I truly enjoyed working on it.
+I'm excited about the possibility of joining your team and look forward to hearing your feedback!
