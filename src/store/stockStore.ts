@@ -1,17 +1,13 @@
 import { SYMBOLS } from "../constants/stockSymbols";
 import type { StockInfo } from "../interfaces/finnhub";
+import type { History, HistoryPoint, StockAlerts } from "../interfaces/store";
 import { create } from "zustand";
-
-export type HistoryPoint = {
-  time: number;
-  [symbol: string]: number;
-};
-
-export type History = { [timestamp: string]: HistoryPoint };
+import { readAlerts } from "./storeUtils";
+import { pushNotification } from "../utils/userNotification";
 
 type StockStore = {
   trackedSymbols: string[];
-  alerts: { [symbol: string]: number };
+  alerts: StockAlerts;
   prices: { [symbol: string]: StockInfo };
   history: History;
   updateAlert: (symbol: string, alertPrice: number) => void;
@@ -47,6 +43,14 @@ export const useStockStore = create<StockStore>((set) => ({
         volume: 0,
         price: 0,
       };
+
+      // checking alerts
+      const { newAlerts } = readAlerts(
+        state.alerts,
+        symbol,
+        currentPriceEntry.price,
+        price
+      );
 
       const flooredTime = Math.floor(timestamp / 1000);
       const prevHistory = state.history;
@@ -109,6 +113,7 @@ export const useStockStore = create<StockStore>((set) => ({
           },
         },
         history: trimmedHistory,
+        alerts: newAlerts,
       };
     });
   },
