@@ -65,7 +65,7 @@ export const StockForm: React.FC = () => {
   );
 
   return (
-    <Box p={6} borderWidth="1px" borderRadius="lg" mb={8} width="min-content">
+    <Box p={6} borderWidth="1px" borderRadius="lg" mb={8} width="auto">
       <Text fontSize="lg" fontWeight="bold" mb={4}>
         Add Stock to Watch
       </Text>
